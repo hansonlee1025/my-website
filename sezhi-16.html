@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>十六进制颜色码转换工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            color: #00695c;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #004d40;
+        }
+        .converter {
+            margin-bottom: 30px;
+        }
+        .converter input {
+            padding: 10px;
+            width: 100%;
+            max-width: 200px;
+            margin-right: 10px;
+            border: 1px solid #004d40;
+            border-radius: 5px;
+        }
+        .converter button {
+            padding: 10px 20px;
+            background-color: #004d40;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .converter button:hover {
+            background-color: #00695c;
+        }
+        .color-preview {
+            width: 100px;
+            height: 100px;
+            margin-top: 10px;
+            border: 1px solid #004d40;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+        }
+        .color-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #004d40;
+        }
+        .color-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .color-table th, .color-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #004d40;
+        }
+        .color-table th {
+            background-color: #004d40;
+            color: #ffffff;
+        }
+        .color-table td {
+            background-color: #e0f7fa;
+        }
+        .color-sample {
+            width: 50px;
+            height: 20px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>十六进制颜色码转换工具</h1>
+        <div class="converter">
+            <input type="text" id="hexInput" placeholder="输入十六进制颜色码">
+            <button onclick="convertHex()">转换</button>
+            <p id="result"></p>
+            <div id="colorPreview" class="color-preview"></div>
+            <div id="colorInfo" class="color-info"></div>
+        </div>
+        <h2>常用颜色对照表</h2>
+        <table class="color-table">
+            <thead>
+                <tr>
+                    <th>颜色示例</th>
+                    <th>英文名</th>
+                    <th>颜色名</th>
+                    <th>十六进制</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 100个常用颜色 -->
+                <tr><td><div class="color-sample" style="background-color: #FF0000;"></div></td><td>Red</td><td>红色</td><td>#FF0000</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #00FF00;"></div></td><td>Lime</td><td>酸橙色</td><td>#00FF00</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #0000FF;"></div></td><td>Blue</td><td>蓝色</td><td>#0000FF</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFFF00;"></div></td><td>Yellow</td><td>黄色</td><td>#FFFF00</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #00FFFF;"></div></td><td>Cyan</td><td>青色</td><td>#00FFFF</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FF00FF;"></div></td><td>Magenta</td><td>洋红色</td><td>#FF00FF</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #800000;"></div></td><td>Maroon</td><td>栗色</td><td>#800000</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #808000;"></div></td><td>Olive</td><td>橄榄色</td><td>#808000</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #008000;"></div></td><td>Green</td><td>绿色</td><td>#008000</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #800080;"></div></td><td>Purple</td><td>紫色</td><td>#800080</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #008080;"></div></td><td>Teal</td><td>水鸭色</td><td>#008080</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #000080;"></div></td><td>Navy</td><td>海军蓝</td><td>#000080</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #C0C0C0;"></div></td><td>Silver</td><td>银色</td><td>#C0C0C0</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #808080;"></div></td><td>Gray</td><td>灰色</td><td>#808080</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFA500;"></div></td><td>Orange</td><td>橙色</td><td>#FFA500</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #A52A2A;"></div></td><td>Brown</td><td>棕色</td><td>#A52A2A</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFC0CB;"></div></td><td>Pink</td><td>粉色</td><td>#FFC0CB</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFD700;"></div></td><td>Gold</td><td>金色</td><td>#FFD700</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #EEE8AA;"></div></td><td>PaleGoldenRod</td><td>灰菊黄</td><td>#EEE8AA</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #98FB98;"></div></td><td>PaleGreen</td><td>苍绿色</td><td>#98FB98</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #AFEEEE;"></div></td><td>PaleTurquoise</td><td>苍宝石绿</td><td>#AFEEEE</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #DB7093;"></div></td><td>PaleVioletRed</td><td>苍紫罗兰红</td><td>#DB7093</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFEFD5;"></div></td><td>PapayaWhip</td><td>番木瓜色</td><td>#FFEFD5</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFDAB9;"></div></td><td>PeachPuff</td><td>桃色</td><td>#FFDAB9</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #CD853F;"></div></td><td>Peru</td><td>秘鲁色</td><td>#CD853F</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFC0CB;"></div></td><td>Pink</td><td>粉色</td><td>#FFC0CB</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #DDA0DD;"></div></td><td>Plum</td><td>李子色</td><td>#DDA0DD</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #B0E0E6;"></div></td><td>PowderBlue</td><td>粉末蓝</td><td>#B0E0E6</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #BC8F8F;"></div></td><td>RosyBrown</td><td>玫瑰棕</td><td>#BC8F8F</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #4169E1;"></div></td><td>RoyalBlue</td><td>皇家蓝</td><td>#4169E1</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #8B4513;"></div></td><td>SaddleBrown</td><td>鞍棕色</td><td>#8B4513</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FA8072;"></div></td><td>Salmon</td><td>鲑鱼色</td><td>#FA8072</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #F4A460;"></div></td><td>SandyBrown</td><td>沙棕色</td><td>#F4A460</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #2E8B57;"></div></td><td>SeaGreen</td><td>海绿色</td><td>#2E8B57</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFF5EE;"></div></td><td>SeaShell</td><td>贝壳色</td><td>#FFF5EE</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #A0522D;"></div></td><td>Sienna</td><td>赭色</td><td>#A0522D</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #87CEEB;"></div></td><td>SkyBlue</td><td>天蓝色</td><td>#87CEEB</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #6A5ACD;"></div></td><td>SlateBlue</td><td>石板蓝</td><td>#6A5ACD</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #708090;"></div></td><td>SlateGray</td><td>石板灰</td><td>#708090</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFFAFA;"></div></td><td>Snow</td><td>雪白色</td><td>#FFFAFA</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #00FF7F;"></div></td><td>SpringGreen</td><td>春绿色</td><td>#00FF7F</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #4682B4;"></div></td><td>SteelBlue</td><td>钢蓝色</td><td>#4682B4</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #D2B48C;"></div></td><td>Tan</td><td>茶色</td><td>#D2B48C</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #008080;"></div></td><td>Teal</td><td>水鸭色</td><td>#008080</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #D8BFD8;"></div></td><td>Thistle</td><td>蓟色</td><td>#D8BFD8</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FF6347;"></div></td><td>Tomato</td><td>番茄色</td><td>#FF6347</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #40E0D0;"></div></td><td>Turquoise</td><td>绿松石色</td><td>#40E0D0</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #EE82EE;"></div></td><td>Violet</td><td>紫罗兰色</td><td>#EE82EE</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #F5DEB3;"></div></td><td>Wheat</td><td>小麦色</td><td>#F5DEB3</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFFFFF;"></div></td><td>White</td><td>白色</td><td>#FFFFFF</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #F5F5F5;"></div></td><td>WhiteSmoke</td><td>白烟色</td><td>#F5F5F5</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #FFFF00;"></div></td><td>Yellow</td><td>黄色</td><td>#FFFF00</td></tr>
+                <tr><td><div class="color-sample" style="background-color: #9ACD32;"></div></td><td>YellowGreen</td><td>黄绿色</td><td>#9ACD32</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // 颜色对照表数据
+        const colorData = [
+            { hex: "#FF0000", enName: "Red", cnName: "红色" },
+            { hex: "#00FF00", enName: "Lime", cnName: "酸橙色" },
+            { hex: "#0000FF", enName: "Blue", cnName: "蓝色" },
+            { hex: "#FFFF00", enName: "Yellow", cnName: "黄色" },
+            { hex: "#00FFFF", enName: "Cyan", cnName: "青色" },
+            { hex: "#FF00FF", enName: "Magenta", cnName: "洋红色" },
+            { hex: "#800000", enName: "Maroon", cnName: "栗色" },
+            { hex: "#808000", enName: "Olive", cnName: "橄榄色" },
+            { hex: "#008000", enName: "Green", cnName: "绿色" },
+            { hex: "#800080", enName: "Purple", cnName: "紫色" },
+            { hex: "#008080", enName: "Teal", cnName: "水鸭色" },
+            { hex: "#000080", enName: "Navy", cnName: "海军蓝" },
+            { hex: "#C0C0C0", enName: "Silver", cnName: "银色" },
+            { hex: "#808080", enName: "Gray", cnName: "灰色" },
+            { hex: "#FFA500", enName: "Orange", cnName: "橙色" },
+            { hex: "#A52A2A", enName: "Brown", cnName: "棕色" },
+            { hex: "#FFC0CB", enName: "Pink", cnName: "粉色" },
+            { hex: "#FFD700", enName: "Gold", cnName: "金色" },
+            { hex: "#EEE8AA", enName: "PaleGoldenRod", cnName: "灰菊黄" },
+            { hex: "#98FB98", enName: "PaleGreen", cnName: "苍绿色" },
+            { hex: "#AFEEEE", enName: "PaleTurquoise", cnName: "苍宝石绿" },
+            { hex: "#DB7093", enName: "PaleVioletRed", cnName: "苍紫罗兰红" },
+            { hex: "#FFEFD5", enName: "PapayaWhip", cnName: "番木瓜色" },
+            { hex: "#FFDAB9", enName: "PeachPuff", cnName: "桃色" },
+            { hex: "#CD853F", enName: "Peru", cnName: "秘鲁色" },
+            { hex: "#DDA0DD", enName: "Plum", cnName: "李子色" },
+            { hex: "#B0E0E6", enName: "PowderBlue", cnName: "粉末蓝" },
+            { hex: "#BC8F8F", enName: "RosyBrown", cnName: "玫瑰棕" },
+            { hex: "#4169E1", enName: "RoyalBlue", cnName: "皇家蓝" },
+            { hex: "#8B4513", enName: "SaddleBrown", cnName: "鞍棕色" },
+            { hex: "#FA8072", enName: "Salmon", cnName: "鲑鱼色" },
+            { hex: "#F4A460", enName: "SandyBrown", cnName: "沙棕色" },
+            { hex: "#2E8B57", enName: "SeaGreen", cnName: "海绿色" },
+            { hex: "#FFF5EE", enName: "SeaShell", cnName: "贝壳色" },
+            { hex: "#A0522D", enName: "Sienna", cnName: "赭色" },
+            { hex: "#87CEEB", enName: "SkyBlue", cnName: "天蓝色" },
+            { hex: "#6A5ACD", enName: "SlateBlue", cnName: "石板蓝" },
+            { hex: "#708090", enName: "SlateGray", cnName: "石板灰" },
+            { hex: "#FFFAFA", enName: "Snow", cnName: "雪白色" },
+            { hex: "#00FF7F", enName: "SpringGreen", cnName: "春绿色" },
+            { hex: "#4682B4", enName: "SteelBlue", cnName: "钢蓝色" },
+            { hex: "#D2B48C", enName: "Tan", cnName: "茶色" },
+            { hex: "#008080", enName: "Teal", cnName: "水鸭色" },
+            { hex: "#D8BFD8", enName: "Thistle", cnName: "蓟色" },
+            { hex: "#FF6347", enName: "Tomato", cnName: "番茄色" },
+            { hex: "#40E0D0", enName: "Turquoise", cnName: "绿松石色" },
+            { hex: "#EE82EE", enName: "Violet", cnName: "紫罗兰色" },
+            { hex: "#F5DEB3", enName: "Wheat", cnName: "小麦色" },
+            { hex: "#FFFFFF", enName: "White", cnName: "白色" },
+            { hex: "#F5F5F5", enName: "WhiteSmoke", cnName: "白烟色" },
+            { hex: "#FFFF00", enName: "Yellow", cnName: "黄色" },
+            { hex: "#9ACD32", enName: "YellowGreen", cnName: "黄绿色" }
+        ];
+
+        function convertHex() {
+            const hexInput = document.getElementById('hexInput').value;
+            const resultElement = document.getElementById('result');
+            const colorPreview = document.getElementById('colorPreview');
+            const colorInfo = document.getElementById('colorInfo');
+            const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
+            if (hexRegex.test(hexInput)) {
+                const color = colorData.find(c => c.hex.toLowerCase() === hexInput.toLowerCase());
+                if (color) {
+                    resultElement.textContent = `转换成功: ${hexInput}`;
+                    resultElement.style.color = '#004d40';
+                    colorPreview.style.backgroundColor = hexInput;
+                    colorInfo.textContent = `英文名: ${color.enName}, 颜色名: ${color.cnName}`;
+                } else {
+                    resultElement.textContent = `转换成功: ${hexInput}`;
+                    resultElement.style.color = '#004d40';
+                    colorPreview.style.backgroundColor = hexInput;
+                    colorInfo.textContent = "未找到对应的颜色名称";
+                }
+            } else {
+                resultElement.textContent = '无效的十六进制颜色码';
+                resultElement.style.color = '#FF0000';
+                colorPreview.style.backgroundColor = '#FFFFFF';
+                colorInfo.textContent = "";
+            }
+        }
+    </script>
+</body>
+</html>
