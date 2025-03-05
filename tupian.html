@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片尺寸修改工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .upload-section, .resize-section, .preview-section {
+            margin-bottom: 20px;
+        }
+        .preview-section img {
+            max-width: 100%;
+            height: auto;
+        }
+        .resize-section input {
+            width: 100px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>图片尺寸修改工具</h1>
+
+        <!-- 上传图片部分 -->
+        <div class="upload-section">
+            <input type="file" id="imageUpload" accept="image/png, image/jpeg, image/jpg, image/gif">
+        </div>
+
+        <!-- 显示图片尺寸 -->
+        <div class="image-info">
+            <p>图片尺寸: <span id="imageDimensions">未上传图片</span></p>
+        </div>
+
+        <!-- 修改图片尺寸部分 -->
+        <div class="resize-section">
+            <label for="width">宽度:</label>
+            <input type="number" id="width" placeholder="宽度">
+            <label for="height">高度:</label>
+            <input type="number" id="height" placeholder="高度">
+            <button onclick="resizeImage()">修改尺寸</button>
+        </div>
+
+        <!-- 图片预览部分 -->
+        <div class="preview-section">
+            <img id="previewImage" src="#" alt="预览图片" style="display:none;">
+        </div>
+
+        <!-- 保存图片部分 -->
+        <div class="save-section">
+            <label for="format">保存格式:</label>
+            <select id="format">
+                <option value="png">PNG</option>
+                <option value="jpeg">JPG/JPEG</option>
+                <option value="gif">GIF</option>
+            </select>
+            <button onclick="saveImage()" id="saveButton" disabled>保存图片</button>
+        </div>
+    </div>
+
+    <script>
+        let originalImage = null;
+        let resizedImage = null;
+
+        // 上传图片
+        document.getElementById('imageUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    originalImage = new Image();
+                    originalImage.src = e.target.result;
+                    originalImage.onload = function() {
+                        document.getElementById('imageDimensions').textContent = `${originalImage.width} x ${originalImage.height}`;
+                        document.getElementById('previewImage').src = originalImage.src;
+                        document.getElementById('previewImage').style.display = 'block';
+                        document.getElementById('saveButton').disabled = true;
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 修改图片尺寸
+        function resizeImage() {
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+
+            if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+                alert('请输入有效的宽度和高度');
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(originalImage, 0, 0, width, height);
+
+            resizedImage = new Image();
+            resizedImage.src = canvas.toDataURL('image/png'); // 默认使用PNG格式预览
+            document.getElementById('previewImage').src = resizedImage.src;
+            document.getElementById('saveButton').disabled = false;
+        }
+
+        // 保存图片
+        function saveImage() {
+            if (resizedImage) {
+                const format = document.getElementById('format').value;
+                const canvas = document.createElement('canvas');
+                canvas.width = resizedImage.width;
+                canvas.height = resizedImage.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(resizedImage, 0, 0);
+
+                let mimeType = 'image/png';
+                if (format === 'jpeg') {
+                    mimeType = 'image/jpeg';
+                } else if (format === 'gif') {
+                    mimeType = 'image/gif';
+                }
+
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL(mimeType);
+                link.download = `resized-image.${format}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    </script>
+</body>
+</html>
